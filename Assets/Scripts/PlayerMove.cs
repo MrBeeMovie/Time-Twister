@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public string horizontalInputName, verticalInputName;
-    public float movementSpeed;
+    [SerializeField] private string horizontalInputName, verticalInputName;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private AnimationCurve jumpFalloff;
+    [SerializeField] private float jumpMultiplier;
+    [SerializeField] private KeyCode jumpKey;
+
+    private bool isJumping = false;
     private CharacterController charController;
 
     private void Awake()
@@ -27,5 +32,35 @@ public class PlayerMove : MonoBehaviour
         Vector3 rightMovement = transform.right * horizInput;
 
         charController.SimpleMove(forwardMovement + rightMovement);
+
+        JumpInput();
+    }
+
+    private void JumpInput()
+    {
+        if(Input.GetKeyDown(jumpKey) & !isJumping)
+        {
+            isJumping = true;
+            StartCoroutine(JumpEvent());
+        }
+    }
+
+    private IEnumerator JumpEvent()
+    {
+        float slopeLimit = charController.slopeLimit;
+        charController.slopeLimit = 90.0f;
+
+        float timeInAir = 0.0f;
+
+        do
+        {
+            float jumpForce = jumpFalloff.Evaluate(timeInAir);
+            charController.Move(Vector3.up * jumpForce * jumpMultiplier * Time.deltaTime);
+            timeInAir += Time.deltaTime;
+            yield return null;
+        } while (!charController.isGrounded & charController.collisionFlags != CollisionFlags.Above);
+
+        charController.slopeLimit = slopeLimit;
+        isJumping = false;
     }
 }
