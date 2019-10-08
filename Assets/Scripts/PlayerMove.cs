@@ -6,7 +6,8 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private string horizontalInputName, verticalInputName;
     [SerializeField] private AnimationCurve jumpFalloff;
-    [SerializeField] private float jumpMultiplier, gravityMultiplier, movementSpeed, runMultiplier;
+    [SerializeField] private float jumpMultiplier, gravityMultiplier, 
+        movementSpeed, runMultiplier, pushForce;
     [SerializeField] private KeyCode jumpKey, runKey;
 
     private Vector3 gravity;
@@ -100,5 +101,15 @@ public class PlayerMove : MonoBehaviour
     {
         if (!charController.isGrounded & !isJumping)
             charController.Move(gravity * Time.unscaledDeltaTime);
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody hitBody = hit.rigidbody;
+
+        if (hitBody == null || hitBody.isKinematic)
+            return;
+
+        hitBody.velocity = pushForce * hit.moveDirection;
     }
 }
