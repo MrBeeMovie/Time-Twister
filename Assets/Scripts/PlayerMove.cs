@@ -5,13 +5,12 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private string horizontalInputName, verticalInputName;
-    [SerializeField] private float movementSpeed;
     [SerializeField] private AnimationCurve jumpFalloff;
-    [SerializeField] private float jumpMultiplier, gravityMultiplier;
-    [SerializeField] private KeyCode jumpKey;
+    [SerializeField] private float jumpMultiplier, gravityMultiplier, movementSpeed, runMultiplier;
+    [SerializeField] private KeyCode jumpKey, runKey;
 
     private Vector3 gravity;
-    private bool isJumping = false;
+    private bool isJumping = false, isRunning = false;
     private CharacterController charController;
 
     private void Awake()
@@ -33,6 +32,14 @@ public class PlayerMove : MonoBehaviour
         Vector3 forwardMovement = transform.forward * vertInput * Time.deltaTime;
         Vector3 rightMovement = transform.right * horizInput * Time.deltaTime;
 
+        RunInput();
+
+        if(isRunning)
+        {
+            forwardMovement *= runMultiplier;
+            rightMovement *= runMultiplier;
+        }
+
         charController.Move(forwardMovement + rightMovement);
 
         JumpInput();
@@ -45,6 +52,15 @@ public class PlayerMove : MonoBehaviour
         {
             isJumping = true;
             StartCoroutine(JumpEvent());
+        }
+    }
+
+    private void RunInput()
+    {
+        if(Input.GetKey(runKey) & !isRunning)
+        {
+            isRunning = true;
+            StartCoroutine(RunEvent());
         }
     }
 
@@ -68,6 +84,16 @@ public class PlayerMove : MonoBehaviour
         } while (charController.collisionFlags != CollisionFlags.Above & isJumping);
 
         charController.slopeLimit = slopeLimit;
+    }
+
+    private IEnumerator RunEvent()
+    {
+        do
+        {
+            yield return null;
+        } while (Input.GetKey(runKey));
+
+        isRunning = false;
     }
 
     private void ApplyGravity()
