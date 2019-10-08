@@ -27,8 +27,8 @@ public class PlayerLook : MonoBehaviour
 
     private void CameraRotation()
     {
-        float mouseX = Input.GetAxis(mousexInputString) * sensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis(mouseyInputString) * sensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxisRaw(mousexInputString) * sensitivity * Time.unscaledDeltaTime;
+        float mouseY = Input.GetAxisRaw(mouseyInputString) * sensitivity * Time.unscaledDeltaTime;
 
         xAxisClamp += mouseY;
 

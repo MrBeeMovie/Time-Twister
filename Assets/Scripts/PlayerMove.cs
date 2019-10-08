@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private string horizontalInputName, verticalInputName;
+    [SerializeField] private string horizontalInputName, verticalInputName, leftClickName;
     [SerializeField] private AnimationCurve jumpFalloff;
     [SerializeField] private float jumpMultiplier, gravityMultiplier, 
         movementSpeed, runMultiplier, pushForce;
-    [SerializeField] private KeyCode jumpKey, runKey;
+    [SerializeField] private KeyCode jumpKey, runKey, freezeKey;
 
     private Vector3 gravity;
-    private bool isJumping = false, isRunning = false;
+    private bool isJumping, isRunning, tookAction;
     private CharacterController charController;
 
     private void Awake()
@@ -20,15 +20,28 @@ public class PlayerMove : MonoBehaviour
         charController = GetComponent<CharacterController>();
     }
 
+    private void Start()
+    {
+        isJumping = isRunning = tookAction = false;
+    }
+
     private void Update()
     {
+        Debug.Log("Updating");
         PlayerMovement();
+        PlayerActions();
+    }
+
+    private void PlayerActions()
+    {
+        ActionInput();
+        FreezeTimeInput();
     }
 
     private void PlayerMovement()
     {
-        float vertInput = Input.GetAxis(verticalInputName) * movementSpeed;
-        float horizInput = Input.GetAxis(horizontalInputName) * movementSpeed;
+        float vertInput = Input.GetAxisRaw(verticalInputName) * movementSpeed;
+        float horizInput = Input.GetAxisRaw(horizontalInputName) * movementSpeed;
 
         Vector3 forwardMovement = transform.forward * vertInput * Time.unscaledDeltaTime;
         Vector3 rightMovement = transform.right * horizInput * Time.unscaledDeltaTime;
@@ -65,6 +78,21 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private void FreezeTimeInput()
+    {
+        if(Input.GetKey(freezeKey))
+        {
+            tookAction = false;
+            StartCoroutine(TimeFreezeEvent());
+        }
+    }
+
+    private void ActionInput()
+    {
+        if (Input.GetButtonDown(leftClickName))
+            tookAction = true;
+    }
+
     private IEnumerator JumpEvent()
     {
         float slopeLimit = charController.slopeLimit;
@@ -76,7 +104,7 @@ public class PlayerMove : MonoBehaviour
         {
             float jumpForce = jumpFalloff.Evaluate(timeInAir);
             charController.Move(Vector3.up * jumpForce * jumpMultiplier * Time.unscaledDeltaTime);
-            timeInAir += Time.deltaTime;
+            timeInAir += Time.unscaledDeltaTime;
 
             // checks if we have reached last key in animation curve
             if (jumpForce == jumpFalloff[jumpFalloff.length - 1].value)
@@ -101,6 +129,18 @@ public class PlayerMove : MonoBehaviour
     {
         if (!charController.isGrounded & !isJumping)
             charController.Move(gravity * Time.unscaledDeltaTime);
+    }
+
+    private IEnumerator TimeFreezeEvent()
+    {
+        TimeController.SetTimeScale(0);
+
+        do {
+            yield return null;
+        } while (!tookAction);
+
+        TimeController.SetTimeScale(1);
+        tookAction = false;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
