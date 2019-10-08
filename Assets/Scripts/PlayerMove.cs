@@ -57,7 +57,7 @@ public class PlayerMove : MonoBehaviour
 
     private void RunInput()
     {
-        if(Input.GetKey(runKey) & !isRunning & !isJumping)
+        if(Input.GetKey(runKey) & !isRunning)
         {
             isRunning = true;
             StartCoroutine(RunEvent());
@@ -91,7 +91,7 @@ public class PlayerMove : MonoBehaviour
         do
         {
             yield return null;
-        } while (Input.GetKey(runKey) & !isJumping);
+        } while (Input.GetKey(runKey));
 
         isRunning = false;
     }
