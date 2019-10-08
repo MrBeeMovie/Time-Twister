@@ -29,8 +29,8 @@ public class PlayerMove : MonoBehaviour
         float vertInput = Input.GetAxis(verticalInputName) * movementSpeed;
         float horizInput = Input.GetAxis(horizontalInputName) * movementSpeed;
 
-        Vector3 forwardMovement = transform.forward * vertInput * Time.deltaTime;
-        Vector3 rightMovement = transform.right * horizInput * Time.deltaTime;
+        Vector3 forwardMovement = transform.forward * vertInput * Time.unscaledDeltaTime;
+        Vector3 rightMovement = transform.right * horizInput * Time.unscaledDeltaTime;
 
         RunInput();
 
@@ -74,7 +74,7 @@ public class PlayerMove : MonoBehaviour
         do
         {
             float jumpForce = jumpFalloff.Evaluate(timeInAir);
-            charController.Move(Vector3.up * jumpForce * jumpMultiplier * Time.deltaTime);
+            charController.Move(Vector3.up * jumpForce * jumpMultiplier * Time.unscaledDeltaTime);
             timeInAir += Time.deltaTime;
 
             // checks if we have reached last key in animation curve
@@ -99,6 +99,6 @@ public class PlayerMove : MonoBehaviour
     private void ApplyGravity()
     {
         if (!charController.isGrounded & !isJumping)
-            charController.Move(gravity * Time.deltaTime);
+            charController.Move(gravity * Time.unscaledDeltaTime);
     }
 }
