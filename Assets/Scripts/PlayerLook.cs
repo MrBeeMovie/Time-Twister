@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
 {
-    [SerializeField] private string mousexInputString, mouseyInputString;
-    [SerializeField] private float sensitivity;
-    [SerializeField] private Transform playerBody;
+    [SerializeField] private string mousexInputString = "Mouse X", mouseyInputString = "Mouse Y";
+    [SerializeField] private float sensitivity = 150f;
+    [SerializeField] private Transform playerBody = null;
     private float xAxisClamp;
 
     private void Awake()

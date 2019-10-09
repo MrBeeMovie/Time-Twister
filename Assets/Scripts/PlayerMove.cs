@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private string horizontalInputName, verticalInputName, leftClickName;
-    [SerializeField] private AnimationCurve jumpFalloff;
-    [SerializeField] private float jumpMultiplier, gravityMultiplier, 
-        movementSpeed, runMultiplier, pushForce;
-    [SerializeField] private KeyCode jumpKey, runKey, freezeKey;
+    [SerializeField] private string horizontalInputName = "Horizontal", verticalInputName = "Vertical";
+    [SerializeField] private AnimationCurve jumpFalloff = AnimationCurve.Constant(0,1,1);
+    [SerializeField] private float jumpMultiplier = 10, gravityMultiplier = 1, 
+        movementSpeed = 6, runMultiplier = 2, pushForce = 5;
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space, runKey = KeyCode.LeftShift;
 
     private Vector3 gravity;
-    private bool isJumping, isRunning, tookAction;
+    private bool isJumping, isRunning;
     private CharacterController charController;
 
     private void Awake()
@@ -22,20 +22,12 @@ public class PlayerMove : MonoBehaviour
 
     private void Start()
     {
-        isJumping = isRunning = tookAction = false;
+        isJumping = isRunning = false;
     }
 
     private void Update()
     {
-        Debug.Log("Updating");
         PlayerMovement();
-        PlayerActions();
-    }
-
-    private void PlayerActions()
-    {
-        ActionInput();
-        FreezeTimeInput();
     }
 
     private void PlayerMovement()
@@ -78,21 +70,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void FreezeTimeInput()
-    {
-        if(Input.GetKey(freezeKey))
-        {
-            tookAction = false;
-            StartCoroutine(TimeFreezeEvent());
-        }
-    }
-
-    private void ActionInput()
-    {
-        if (Input.GetButtonDown(leftClickName))
-            tookAction = true;
-    }
-
     private IEnumerator JumpEvent()
     {
         float slopeLimit = charController.slopeLimit;
@@ -129,18 +106,6 @@ public class PlayerMove : MonoBehaviour
     {
         if (!charController.isGrounded & !isJumping)
             charController.Move(gravity * Time.unscaledDeltaTime);
-    }
-
-    private IEnumerator TimeFreezeEvent()
-    {
-        TimeController.SetTimeScale(0);
-
-        do {
-            yield return null;
-        } while (!tookAction);
-
-        TimeController.SetTimeScale(1);
-        tookAction = false;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

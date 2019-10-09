@@ -2346,6 +2346,7 @@ GameObject:
   - component: {fileID: 1145650786}
   - component: {fileID: 1145650787}
   - component: {fileID: 1145650788}
+  - component: {fileID: 1145650789}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2400,7 +2401,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalInputName: Horizontal
   verticalInputName: Vertical
-  leftClickName: Fire1
   jumpFalloff:
     serializedVersion: 2
     m_Curve:
@@ -2432,6 +2432,19 @@ MonoBehaviour:
   pushForce: 5
   jumpKey: 32
   runKey: 304
+--- !u!114 &1145650789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145650785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb4dc7796d4ee79439b675997f268242, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftClickName: Fire1
   freezeKey: 101
 --- !u!1 &1196885382
 GameObject:
