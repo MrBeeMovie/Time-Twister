@@ -17,4 +17,9 @@ public class TimeController : MonoBehaviour
         Time.timeScale = timeScale;
         currentTimeScale = timeScale;
     }
+
+    public static float GetTimeScale()
+    {
+        return currentTimeScale;
+    }
 }
