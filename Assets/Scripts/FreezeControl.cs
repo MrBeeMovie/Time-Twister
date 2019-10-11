@@ -39,11 +39,7 @@ public class FreezeControl : MonoBehaviour
         {
             // Make sure that nothing changes kinematic state
             if (!rigidbody.isKinematic)
-            {
-                // If it kinematic state was changed re-calculate last velocity
-                lastVelocity = rigidbody.velocity;
                 rigidbody.isKinematic = true;
-            }
 
             yield return null;
         } while (TimeController.GetTimeScale() == TimeController.TIME_FROZEN);
@@ -51,7 +47,6 @@ public class FreezeControl : MonoBehaviour
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
         rigidbody.velocity = lastVelocity;
-        lastVelocity = Vector3.zero;
 
         isRunningCoroutine = false;
     }
@@ -69,11 +64,7 @@ public class FreezeControl : MonoBehaviour
         {
             // Make sure that nothing changes kinematic state
             if (!rigidbody.isKinematic)
-            {
-                // If it kinematic state was changed re-calculate last velocity
-                lastVelocity = rigidbody.velocity;
                 rigidbody.isKinematic = true;
-            }
 
             yield return null;
         } while (TimeController.GetTimeScale() != TimeController.TIME_FROZEN);
@@ -81,8 +72,12 @@ public class FreezeControl : MonoBehaviour
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
         rigidbody.velocity = lastVelocity;
-        lastVelocity = Vector3.zero;
 
         isRunningCoroutine = false;
+    }
+
+    public void SetLastVelocity(Vector3 newVelocity)
+    {
+        lastVelocity = newVelocity;
     }
 }

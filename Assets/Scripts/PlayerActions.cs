@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerActions : MonoBehaviour
 {
     [SerializeField] private string leftClickName = "Fire1", holdableLayer = "";   
-    [SerializeField] private KeyCode freezeKey = KeyCode.E;
+    [SerializeField] private KeyCode freezeKey = KeyCode.E, unfreezeKey = KeyCode.Q;
     [SerializeField] private float pickupDistance = 5, throwDistance = 10;
 
     private bool tookAction = false, isHolding = false;
@@ -41,7 +41,6 @@ public class PlayerActions : MonoBehaviour
 
         // If we hit a GameObject on specified layer
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out raycast, pickupDistance, layermask)) {
-            tookAction = true;
 
             Transform hit = raycast.transform;
             Rigidbody hitRigidbody = hit.GetComponent<Rigidbody>();
@@ -64,7 +63,7 @@ public class PlayerActions : MonoBehaviour
             hit.SetParent(null);
             hitRigidbody.isKinematic = false;
             Vector3 throwForce = transform.TransformDirection(Vector3.forward * throwDistance);
-            hitRigidbody.velocity = throwForce;
+            hit.GetComponent<FreezeControl>().SetLastVelocity(throwForce);
         }
 
         isHolding = false;
@@ -77,6 +76,9 @@ public class PlayerActions : MonoBehaviour
             tookAction = false;
             StartCoroutine(TimeFreezeEvent());
         }
+
+        else if (Input.GetKey(unfreezeKey))
+            tookAction = true;
     }
 
     private IEnumerator TimeFreezeEvent()
