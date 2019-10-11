@@ -63,7 +63,12 @@ public class PlayerActions : MonoBehaviour
             hit.SetParent(null);
             hitRigidbody.isKinematic = false;
             Vector3 throwForce = transform.TransformDirection(Vector3.forward * throwDistance);
-            hit.GetComponent<FreezeControl>().SetLastVelocity(throwForce);
+            FreezeControl freezeControl = hit.GetComponent<FreezeControl>();
+
+            if (freezeControl != null)
+                freezeControl.SetLastVelocity(throwForce);
+
+            hitRigidbody.velocity = throwForce;
         }
 
         isHolding = false;
