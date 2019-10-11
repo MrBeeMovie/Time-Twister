@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class FreezeControl : MonoBehaviour
 {
+    // WARNING DO NOT ATTACH TO GAMEOBJECTS YOU WANT TO BE TIMEAVERSE
+
     private Vector3 lastVelocity = Vector3.zero;
     private new Rigidbody rigidbody;
-    private bool isRunningCoroutine = false;
+    private bool isRunningCoroutine = false, isTimeDependent;
 
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
+        isTimeDependent = CompareTag("TimeDependent");
     }
 
     private void FixedUpdate()
     {
-        // If GameObject is timedependent wait and timescale is set to zero run WaitForUnfreeze coroutine
-        if (CompareTag("TimeDependent") & TimeController.GetTimeScale() == 0 & !isRunningCoroutine)
+        // If GameObject is timedependent wait and timescale is TIME_FROZEN run WaitForUnfreeze coroutine
+        if (isTimeDependent & TimeController.GetTimeScale() == TimeController.TIME_FROZEN & !isRunningCoroutine)
             StartCoroutine(WaitForUnfreeze());
-        // If GameObject is timeindependent wait and timescale is not set to zero run WaitForFreeze coroutine
-        else if (CompareTag("TimeIndependent") & TimeController.GetTimeScale() != 0 & !isRunningCoroutine)
+        // If GameObject is timeindependent wait and timescale is TIME_DEFAULT run WaitForFreeze coroutine
+        else if (!isTimeDependent & TimeController.GetTimeScale() == TimeController.TIME_DEFAULT & !isRunningCoroutine)
             StartCoroutine(WaitForFreeze());
     }
 
@@ -35,7 +38,7 @@ public class FreezeControl : MonoBehaviour
         do
         {
             yield return null;
-        } while (TimeController.GetTimeScale() == 0);
+        } while (TimeController.GetTimeScale() == TimeController.TIME_FROZEN);
 
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
@@ -57,7 +60,7 @@ public class FreezeControl : MonoBehaviour
         do
         {
             yield return null;
-        } while (TimeController.GetTimeScale() != 0);
+        } while (TimeController.GetTimeScale() != TimeController.TIME_FROZEN);
 
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
