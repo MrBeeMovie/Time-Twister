@@ -13,8 +13,7 @@ public class TimeController : MonoBehaviour
 
     public static void SetTimeScale(float timeScale)
     {
-        // Set the time scale to value passed and keep copy in TimeController
-        Time.timeScale = timeScale;
+        // Set the time scale to value passed
         currentTimeScale = timeScale;
     }
 
