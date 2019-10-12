@@ -5,7 +5,8 @@ using UnityEngine;
 public class ColoCoder : MonoBehaviour
 {
     [SerializeField] private Color freezeColor = Color.blue;
-        
+
+    private bool isWaiting = false;
     private Color previousColor;
     private Material material;
 
@@ -22,16 +23,21 @@ public class ColoCoder : MonoBehaviour
 
     private void CheckTimeScale()
     {
-        float timeScale = TimeController.GetTimeScale();
+        if (!isWaiting)
+        {
+            float timeScale = TimeController.GetTimeScale();
 
-        if (timeScale == 0 & CompareTag("TimeDependent"))
-            StartCoroutine(KeepFrozenColor());
-        else if(timeScale != 0 & CompareTag("TimeIndependent"))
-            StartCoroutine(KeepFrozenColor());
+            if (timeScale == TimeController.TIME_FROZEN & CompareTag("TimeDependent"))
+                StartCoroutine(KeepFrozenColor());
+            else if (timeScale == TimeController.TIME_DEFAULT & CompareTag("TimeIndependent"))
+                StartCoroutine(KeepFrozenColor());
+        }
     }
 
     private IEnumerator KeepFrozenColor()
     {
+        isWaiting = true;
+
         material.SetColor("_Color", freezeColor);
 
         if(CompareTag("TimeDependent"))
@@ -52,5 +58,6 @@ public class ColoCoder : MonoBehaviour
         
 
         material.SetColor("_Color", previousColor);
+        isWaiting = false;
     }
 }
