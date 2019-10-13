@@ -68,7 +68,7 @@ public class PlayerActions : MonoBehaviour
             if (freezeControl != null)
                 freezeControl.SetLastVelocity(throwForce);
 
-            hitRigidbody.velocity = throwForce;
+            hitRigidbody.AddForce(throwForce, ForceMode.Impulse);
         }
 
         isHolding = false;

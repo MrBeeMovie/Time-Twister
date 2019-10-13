@@ -46,7 +46,7 @@ public class FreezeControl : MonoBehaviour
 
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
-        rigidbody.velocity = lastVelocity;
+        rigidbody.AddForce(lastVelocity, ForceMode.Impulse);
 
         isRunningCoroutine = false;
     }
@@ -71,7 +71,7 @@ public class FreezeControl : MonoBehaviour
 
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
-        rigidbody.velocity = lastVelocity;
+        rigidbody.AddForce(lastVelocity, ForceMode.Impulse);
 
         isRunningCoroutine = false;
     }
