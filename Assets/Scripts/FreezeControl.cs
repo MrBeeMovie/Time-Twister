@@ -30,22 +30,20 @@ public class FreezeControl : MonoBehaviour
     {
         isRunningCoroutine = true;
 
-        // Save last know velocity before freeze and set to kinematic
+        // Save last know velocity before freeze
         lastVelocity = rigidbody.velocity;
-        rigidbody.isKinematic = true;
+
+        // Freeze rigid body's position and rotation
+        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
         // Wait until timeScale is no longer zero
         do
         {
-            // Make sure that nothing changes kinematic state
-            if (!rigidbody.isKinematic)
-                rigidbody.isKinematic = true;
-
             yield return null;
         } while (TimeController.GetTimeScale() == TimeController.TIME_FROZEN);
 
-        // Reset velocity and set kinematic to false
-        rigidbody.isKinematic = false;
+        // Reset velocity and unfreeze
+        rigidbody.constraints = RigidbodyConstraints.None;
         rigidbody.velocity = lastVelocity;
 
         isRunningCoroutine = false;
@@ -55,22 +53,20 @@ public class FreezeControl : MonoBehaviour
     {
         isRunningCoroutine = true;
 
-        // Save last know velocity before unfreeze and set to kinematic
+        // Save last know velocity before unfreeze
         lastVelocity = rigidbody.velocity;
-        rigidbody.isKinematic = true;
+
+        // Freeze rigid body's position and rotation
+        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
         // Wait until timeScale is equal to zero
         do
         {
-            // Make sure that nothing changes kinematic state
-            if (!rigidbody.isKinematic)
-                rigidbody.isKinematic = true;
-
             yield return null;
         } while (TimeController.GetTimeScale() != TimeController.TIME_FROZEN);
 
-        // Reset velocity and set kinematic to false
-        rigidbody.isKinematic = false;
+        // Reset velocity and unfreeze
+        rigidbody.constraints = RigidbodyConstraints.None;
         rigidbody.velocity = lastVelocity;
 
         isRunningCoroutine = false;
