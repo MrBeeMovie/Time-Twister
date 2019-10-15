@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class PlayerActions : MonoBehaviour
 {
@@ -36,39 +37,42 @@ public class PlayerActions : MonoBehaviour
     {
         isHolding = true;
 
+        // Create layer mask for holdable objects
         int layermask = LayerMask.GetMask(holdableLayer);
+
         RaycastHit raycast;
 
         // If we hit a GameObject on specified layer
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out raycast, pickupDistance, layermask)) {
 
+            // Save object information for later use
             Transform hit = raycast.transform;
             Rigidbody hitRigidbody = hit.GetComponent<Rigidbody>();
 
-            // Set the hit object to kinimatic and set player as parent
-            hitRigidbody.isKinematic = true;
-            hit.SetParent(transform);
-            
+            // Set parent constraint for object to hold
+            ParentConstraint hitConstraint = hit.GetComponent<ParentConstraint>();
+            hitConstraint.SetTranslationOffset(0, transform.InverseTransformPoint(hit.position));
+            hitConstraint.SetRotationOffset(0, (Quaternion.Inverse(transform.rotation) * hit.rotation).eulerAngles);
+            hitConstraint.constraintActive = true;
 
             do
             {
-                // Check if hit's rigidbody is kinematic if not make kinematic
-                if (!hitRigidbody.isKinematic)
-                    hitRigidbody.isKinematic = true;
-
                 yield return null;
             } while (!Input.GetButtonDown(leftClickName));
+            
+            // Disable the parent constraint
+            hitConstraint.constraintActive = false;
 
-            // When left click is pressed throw object
-            hit.SetParent(null);
-            hitRigidbody.isKinematic = false;
-            Vector3 throwForce = transform.TransformDirection(Vector3.forward * throwDistance);
+            // Calculate throwForce
+            Vector3 throwForce = transform.TransformDirection(Vector3.forward) * throwDistance;
+
+            // If the holdable object has a FreezeControl script set velocity accordingly
             FreezeControl freezeControl = hit.GetComponent<FreezeControl>();
 
             if (freezeControl != null)
                 freezeControl.SetLastVelocity(throwForce);
 
-            hitRigidbody.AddForce(throwForce, ForceMode.Impulse);
+            hitRigidbody.velocity = throwForce;
         }
 
         isHolding = false;

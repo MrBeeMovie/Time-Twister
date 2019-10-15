@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// WARNING DO NOT ATTACH TO GAMEOBJECTS YOU WANT TO BE TIMEAVERSE
+
 public class FreezeControl : MonoBehaviour
 {
-    // WARNING DO NOT ATTACH TO GAMEOBJECTS YOU WANT TO BE TIMEAVERSE
-
     private Vector3 lastVelocity = Vector3.zero;
     private new Rigidbody rigidbody;
     private bool isRunningCoroutine = false, isTimeDependent;
@@ -46,7 +46,7 @@ public class FreezeControl : MonoBehaviour
 
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
-        rigidbody.AddForce(lastVelocity, ForceMode.Impulse);
+        rigidbody.velocity = lastVelocity;
 
         isRunningCoroutine = false;
     }
@@ -71,7 +71,7 @@ public class FreezeControl : MonoBehaviour
 
         // Reset velocity and set kinematic to false
         rigidbody.isKinematic = false;
-        rigidbody.AddForce(lastVelocity, ForceMode.Impulse);
+        rigidbody.velocity = lastVelocity;
 
         isRunningCoroutine = false;
     }

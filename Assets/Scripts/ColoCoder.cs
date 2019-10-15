@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// WARNING DO NOT ATTACH TO OBJECTS WHICH ARE TIME AVERSE WILL DECREASE GAME PERFORMANCE
+
 public class ColoCoder : MonoBehaviour
 {
     [SerializeField] private Color freezeColor = Color.blue;
