@@ -57,7 +57,6 @@ public class ColoCoder : MonoBehaviour
                 yield return null;
             } while (TimeController.GetTimeScale() != 0);
         }
-        
 
         material.SetColor("_Color", previousColor);
         isWaiting = false;
