@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2878965403444121071}
   - component: {fileID: 5728749823807613296}
   - component: {fileID: 5728749823807613299}
+  - component: {fileID: 8714705725921493167}
   m_Layer: 8
   m_Name: TimeControlledCube
   m_TagString: TimeDependent
@@ -163,3 +164,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54584ba490203e245ba7d063081c6b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8714705725921493167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5728749823807613290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba9a890f394d2b04ba5fc199a6af755b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weightStep: 0.05
+  minWeight: 0.1
+  moveDelay: 0.25

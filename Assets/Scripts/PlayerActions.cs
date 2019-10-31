@@ -53,6 +53,7 @@ public class PlayerActions : MonoBehaviour
             ParentConstraint hitConstraint = hit.GetComponent<ParentConstraint>();
             hitConstraint.SetTranslationOffset(0, transform.InverseTransformPoint(hit.position));
             hitConstraint.SetRotationOffset(0, (Quaternion.Inverse(transform.rotation) * hit.rotation).eulerAngles);
+            hitConstraint.weight = 1f;
             hitConstraint.constraintActive = true;
 
             do
